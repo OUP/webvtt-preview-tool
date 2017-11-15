@@ -1,0 +1,51 @@
+
+        body {
+            font-family: arial,sans-serif;
+        }
+
+        video {
+            border: 1px solid #aaa;
+            object-fit: initial;
+            width:500px;
+            height:100px;
+        }
+
+        ::cue {
+            font-size: 12px;
+        }
+
+        .warnings-container {
+            display: none;
+        }
+
+        .warnings {
+            color:darkred;
+            background-color:white;
+        }
+
+        .transcript-container {
+            display: none;
+        }
+        .transcript {
+            width:80%;
+            height:300px;
+            overflow:auto;
+            margin:auto;
+        }
+
+        nav {
+            margin-top:1em;
+
+        }
+
+        nav input {
+            cursor: pointer;
+        }
+
+        nav select, nav input {
+            font-size:1.25em;
+        }
+
+        .preview {
+            display: none;
+        }

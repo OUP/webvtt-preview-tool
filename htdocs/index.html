@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Example Audio</title>
+    <link rel="stylesheet" href="css/vtt-browser.css">
+
+    
+</head>
+
+<body>
+        
+    <div class="instructions"></div>
+    
+    <input type="file" class="multiple-file-input" multiple="multiple">
+
+    <br>
+    
+    
+    <section class="preview">
+    
+        <nav>
+            <input class="back" type="button" value="&lsaquo;">
+            <select class="audio-selection"></select>            
+            <input class="next" type="button" value="&rsaquo;">
+        </nav>
+
+        <br>
+
+        <div class="audio-info"></div>
+        <div class="audio-player"></div>
+
+        <br>
+
+        <details class="warnings-container" open>
+            <summary>Warnings</summary>
+            <div class="warnings"></div>
+        </details>
+
+        <details class="transcript-container" open>
+            <summary>Transcript</summary>
+            <textarea class="transcript"></textarea>
+        </details>
+
+    </section>
+
+    <script src="libs/jquery.3.2.1.min.js"></script>
+
+    <script src="js/vtt_browser.js"></script>
+
+</body>
+
+</html>
