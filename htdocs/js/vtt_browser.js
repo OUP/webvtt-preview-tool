@@ -299,6 +299,7 @@
     function enableEvents(){
         $("."+FILE_INPUT_CLASS).on('change', updateFiles);
         $(BACK_OR_NEXT_SELECTOR).on('click', backOrNext);
+        $("."+SELECT_CLASS).on('change', updatePreview);
             
     }
     
