@@ -2,7 +2,8 @@
 
 (function vttBrowser(){
 
-    var folder = "AUDIO_FILES/";
+    var audioFilesFolder = "AUDIO_FILES";
+    var BROWSE_CLASS = "browse";
     var PREVIEW_CLASS = "preview";
     var AUDIO_PLAYER_CLASS = 'audio-player';
     var FILE_INPUT_CLASS = 'multiple-file-input';
@@ -13,6 +14,8 @@
     var TRANSCRIPT_CLASS = 'transcript';
     var AUDIO_INFO_CLASS = "audio-info";
     var INSTRUCTIONS_CLASS = "instructions";
+    var AUDIO_FOLDER_CLASS = "audio-folder";
+    var BACK_TO_FILES_CLASS = "file-choice";
 
     var BACK_CLASS = "back";
     var NEXT_CLASS = "next";
@@ -28,15 +31,23 @@
     var AUDIO_REGEXP = new RegExp(AUDIO_FILE_EXT,'i');
     var TRANSCRIPT_REGEXP = new RegExp(TRANSCRIPT_FILE_EXT,'i');
     
-    var instructions = '<p>Please select some audio ('+AUDIO_FILE_EXT+') and transcript ('+TRANSCRIPT_FILE_EXT+') files.</p><p>The filenames of each audio and transcript file should be identical.</p>';
+    var instructions = [
+        '<p>Please select some audio ('+AUDIO_FILE_EXT+') and transcript ('+TRANSCRIPT_FILE_EXT+') files.</p>',
+        '<p>The filenames of each audio and transcript file should be identical.</p>',
+        '<p>Browse to this folder (within htdocs):</p>'        
+    ].join("");
 
     function showInstructions(){
-        $("."+INSTRUCTIONS_CLASS).html(instructions).show();
+        
+        $("."+AUDIO_FOLDER_CLASS).val(audioFilesFolder);
+        $("."+INSTRUCTIONS_CLASS).html(instructions);
+
+        $("."+BROWSE_CLASS).show();
         $("."+PREVIEW_CLASS).hide();
     }
 
     function hideInstructions(){
-        $("."+INSTRUCTIONS_CLASS).hide();
+        $("."+BROWSE_CLASS).hide();
         $("."+PREVIEW_CLASS).show();
     }
 
@@ -178,7 +189,7 @@
         resetTranscript();
 
         var basename = getCurrentBasename();
-        var filename = folder + basename + TRANSCRIPT_FILE_EXT;
+        var filename = audioFilesFolder + "/" + basename + TRANSCRIPT_FILE_EXT;
 
         $.ajax({
             url : filename,
@@ -212,8 +223,8 @@
 
         var audioHtml = [
             '<video controls>',
-                '<source type="',AUDIO_MIMETYPE,'" src="',folder,basename,AUDIO_FILE_EXT,'">',
-                '<track label="English" kind="subtitles" srclang="en" src="',folder,basename,TRANSCRIPT_FILE_EXT,'" default>',
+                '<source type="',AUDIO_MIMETYPE,'" src="',audioFilesFolder,"/",basename,AUDIO_FILE_EXT,'">',
+                '<track label="English" kind="subtitles" srclang="en" src="',audioFilesFolder,"/",basename,TRANSCRIPT_FILE_EXT,'" default>',
             '</video>'
         ];     
 
@@ -296,16 +307,24 @@
         console.error("Weird button",this);
     }
 
+    function updateFolder(){
+        audioFilesFolder = $("."+AUDIO_FOLDER_CLASS).val();
+    }
+
     function enableEvents(){
         $("."+FILE_INPUT_CLASS).on('change', updateFiles);
         $(BACK_OR_NEXT_SELECTOR).on('click', backOrNext);
         $("."+SELECT_CLASS).on('change', updatePreview);
-            
+        $("."+AUDIO_FOLDER_CLASS).on('change',updateFolder);
+        $("."+BACK_TO_FILES_CLASS).on('click',showInstructions);
     }
     
-    resetFiles();
-    showInstructions();
+    function init(){
+        resetFiles();
+        showInstructions();
+        enableEvents();
+    }
 
-    enableEvents();
+    init();
 
 }());

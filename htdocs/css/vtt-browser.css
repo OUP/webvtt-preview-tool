@@ -38,12 +38,17 @@
 
         }
 
-        nav input {
+        input[type="button"],
+        input[type="file"] {
             cursor: pointer;
         }
 
         nav select, nav input {
             font-size:1.25em;
+        }
+
+        .browser {
+            display: none;
         }
 
         .preview {
