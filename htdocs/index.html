@@ -17,7 +17,9 @@
 
         <div class="instructions"></div>
         
-        <input class="audio-folder" type="text" placeholder="Your audio files folder">
+        <input class="media-folder" type="text" placeholder="Your media files folder">
+    
+        
 
         <input type="file" class="multiple-file-input" multiple="multiple">
 
@@ -36,9 +38,14 @@
         </nav>
 
         <br>
+        
+        <label for="custom-fontsize">Font Size</label>
+        <input type="range" min="5" max="50" value="20" id="custom-fontsize">
+        
+        <br>
 
-        <div class="audio-info"></div>
-        <div class="audio-player"></div>
+        <div class="media-info"></div>
+        <div class="media-player"></div>
 
         <br>
 
@@ -55,7 +62,8 @@
     </section>
 
     <script src="libs/jquery.3.2.1.min.js"></script>
-
+    <script src="libs/jquery.throttle.debounce.min.js"></script>
+    
     <script src="js/vtt_browser.js"></script>
 
 </body>

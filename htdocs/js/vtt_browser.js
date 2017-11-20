@@ -2,20 +2,25 @@
 
 (function vttBrowser(){
 
-    var audioFilesFolder = "AUDIO_FILES";
+    var mediaFilesFolder = "AUDIO_AND_VIDEO_FILES";
     var BROWSE_CLASS = "browse";
     var PREVIEW_CLASS = "preview";
-    var AUDIO_PLAYER_CLASS = 'audio-player';
+    var PLAYER_CLASS = 'media-player';
     var FILE_INPUT_CLASS = 'multiple-file-input';
     var SELECT_CLASS = 'audio-selection';
     var WARNINGS_CONTAINER_CLASS = 'warnings-container';
     var WARNINGS_CLASS = 'warnings';
     var TRANSCRIPT_CONTAINER_CLASS = "transcript-container";
     var TRANSCRIPT_CLASS = 'transcript';
-    var AUDIO_INFO_CLASS = "audio-info";
+    var AUDIO_INFO_CLASS = "media-info";
     var INSTRUCTIONS_CLASS = "instructions";
-    var AUDIO_FOLDER_CLASS = "audio-folder";
+    var MEDIA_FOLDER_CLASS = "media-folder";
     var BACK_TO_FILES_CLASS = "file-choice";
+    var AUDIO_CLASS = "format-audio";
+    var VIDEO_CLASS = "format-video";
+    var FONTSIZE_SELECTOR = "#custom-fontsize";
+
+    var UPDATE_STYLES_THROTTLE_MS = 500;
 
     var BACK_CLASS = "back";
     var NEXT_CLASS = "next";
@@ -24,22 +29,26 @@
     var basenames;
 
     var AUDIO_MIMETYPE = "audio/mp3";
+    var VIDEO_MIMETYPE = "video/mp4";
 
     var AUDIO_FILE_EXT = ".MP3";
+    var VIDEO_FILE_EXT = ".MP4";
     var TRANSCRIPT_FILE_EXT = ".VTT";
 
+    var ABOUT_FILE_REGEXP = /about\.txt/i;
     var AUDIO_REGEXP = new RegExp(AUDIO_FILE_EXT,'i');
+    var VIDEO_REGEXP = new RegExp(VIDEO_FILE_EXT,'i');
     var TRANSCRIPT_REGEXP = new RegExp(TRANSCRIPT_FILE_EXT,'i');
     
     var instructions = [
-        '<p>Please select some audio ('+AUDIO_FILE_EXT+') and transcript ('+TRANSCRIPT_FILE_EXT+') files.</p>',
-        '<p>The filenames of each audio and transcript file should be identical.</p>',
+        '<p>Please select some audio ('+AUDIO_FILE_EXT+') or video ('+VIDEO_FILE_EXT+') and transcript ('+TRANSCRIPT_FILE_EXT+') files.</p>',
+        '<p>The filenames of each media and transcript file should be identical.</p>',
         '<p>Browse to this folder (within htdocs):</p>'        
     ].join("");
 
     function showInstructions(){
         
-        $("."+AUDIO_FOLDER_CLASS).val(audioFilesFolder);
+        $("."+MEDIA_FOLDER_CLASS).val(mediaFilesFolder);
         $("."+INSTRUCTIONS_CLASS).html(instructions);
 
         $("."+BROWSE_CLASS).show();
@@ -90,6 +99,10 @@
         return hasFileType(basename,AUDIO_FILE_EXT);
     }
 
+    function hasVideo(basename){
+        return hasFileType(basename,VIDEO_FILE_EXT);
+    }
+
     function hasTranscript(basename){
         return hasFileType(basename,TRANSCRIPT_FILE_EXT);
     }
@@ -110,16 +123,26 @@
                 return true;
             }
 
+            if (filename.match(VIDEO_REGEXP)){
+                
+                basename = filename.replace(VIDEO_REGEXP,"");
+                createBase(basename);
+                basenames[basename].push(VIDEO_FILE_EXT);
+                return true;
+            }
+           
             if (filename.match(TRANSCRIPT_REGEXP)){
                 
                 basename = filename.replace(TRANSCRIPT_REGEXP,"");
-                createBase(basename);
-                
+                createBase(basename);                
                 basenames[basename].push(TRANSCRIPT_FILE_EXT);
                 return true;
             }
 
-            warn("Ignoring file '"+filename+"'");
+            if (filename.match(ABOUT_FILE_REGEXP)){
+                // ignore standard "about" file
+                return true;
+            }
 
         });
 
@@ -129,8 +152,8 @@
                 warn(basename + " is missing its VTT file");
             }
 
-            if (!hasAudio(basename)){
-                warn(basename + " is missing its MP3 file");
+            if (!hasAudio(basename) && !hasVideo(basename)){
+                warn(basename + " is missing a matching audio or video file");
             }
 
         });
@@ -158,8 +181,8 @@
 
     }
 
-    function clearAudioPlayer(){
-        $("."+AUDIO_PLAYER_CLASS).html("");
+    function clearMediaPlayer(){
+        $("."+PLAYER_CLASS).html("");
     }
 
     function getCurrentBasename(){
@@ -189,7 +212,7 @@
         resetTranscript();
 
         var basename = getCurrentBasename();
-        var filename = audioFilesFolder + "/" + basename + TRANSCRIPT_FILE_EXT;
+        var filename = mediaFilesFolder + "/" + basename + TRANSCRIPT_FILE_EXT;
 
         $.ajax({
             url : filename,
@@ -202,18 +225,29 @@
 
     }
 
-    function createAudioTag(){
+    function createMediaTag(){
         
-        clearAudioPlayer();
+        clearMediaPlayer();
         
         var basename = getCurrentBasename();
+        var mediaClass;
+        var mimetype;
+        var extension;
 
         if (!basename){
-            console.log("No audio basename - cannot show audio");
+            console.log("No audio/video basename - cannot dispaly");
             return;
         }
         
-        if (!hasAudio(basename)){
+        if (hasAudio(basename)){
+            mediaClass = AUDIO_CLASS;
+            mimetype = AUDIO_MIMETYPE;
+            extension = AUDIO_FILE_EXT;
+        } else if (hasVideo(basename)){
+            mediaClass = VIDEO_CLASS;
+            mimetype = VIDEO_MIMETYPE;
+            extension = VIDEO_FILE_EXT;
+        } else {
             info("This file has no audio");
         }
 
@@ -222,20 +256,20 @@
         }
 
         var audioHtml = [
-            '<video controls>',
-                '<source type="',AUDIO_MIMETYPE,'" src="',audioFilesFolder,"/",basename,AUDIO_FILE_EXT,'">',
-                '<track label="English" kind="subtitles" srclang="en" src="',audioFilesFolder,"/",basename,TRANSCRIPT_FILE_EXT,'" default>',
+            '<video class="',mediaClass,'" controls>',
+                '<source type="',mimetype,'" src="',mediaFilesFolder,"/",basename,extension,'">',
+                '<track label="English" kind="subtitles" srclang="en" src="',mediaFilesFolder,"/",basename,TRANSCRIPT_FILE_EXT,'" default>',
             '</video>'
         ];     
 
         console.info(audioHtml);
 
-        $("."+AUDIO_PLAYER_CLASS).html(audioHtml.join(""));
+        $("."+PLAYER_CLASS).html(audioHtml.join(""));
     }
 
     function updatePreview(){
         clearInfo();
-        createAudioTag();
+        createMediaTag();
         loadTranscript();
     }
 
@@ -308,15 +342,29 @@
     }
 
     function updateFolder(){
-        audioFilesFolder = $("."+AUDIO_FOLDER_CLASS).val();
+        mediaFilesFolder = $("."+MEDIA_FOLDER_CLASS).val();
     }
 
+    function updateFontSize(){
+        var newSize = $(FONTSIZE_SELECTOR).val();
+        console.log("Updated to "+newSize);
+        // you cannot directly change the ::cue so we write a new style
+        var style = document.createElement("style");
+        style.textContent = "video::cue {font-size: "+newSize+"px;}";
+        document.body.appendChild(style);
+
+    }
+    
     function enableEvents(){
         $("."+FILE_INPUT_CLASS).on('change', updateFiles);
         $(BACK_OR_NEXT_SELECTOR).on('click', backOrNext);
         $("."+SELECT_CLASS).on('change', updatePreview);
-        $("."+AUDIO_FOLDER_CLASS).on('change',updateFolder);
+        $("."+MEDIA_FOLDER_CLASS).on('change',updateFolder);
         $("."+BACK_TO_FILES_CLASS).on('click',showInstructions);
+        
+        $(FONTSIZE_SELECTOR).on('change',
+            $.throttle(UPDATE_STYLES_THROTTLE_MS,updateFontSize)
+        );
     }
     
     function init(){

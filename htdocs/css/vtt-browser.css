@@ -7,11 +7,16 @@
             border: 1px solid #aaa;
             object-fit: initial;
             width:500px;
-            height:100px;
+            height:500px;            
+        }
+
+        video.format-audio {
+            height:200px;
         }
 
         ::cue {
-            font-size: 12px;
+            font-size:20px;
+            color:white;
         }
 
         .warnings-container {
@@ -53,4 +58,12 @@
 
         .preview {
             display: none;
+        }
+
+        .media-folder {
+            width:200px;
+        }
+
+        #custom-fontsize {
+            vertical-align: middle;
         }
