@@ -256,7 +256,7 @@
         }
 
         var audioHtml = [
-            '<video class="',mediaClass,'" controls>',
+            '<video class="',mediaClass,'" controls preload>',
                 '<source type="',mimetype,'" src="',mediaFilesFolder,"/",basename,extension,'">',
                 '<track label="English" kind="subtitles" srclang="en" src="',mediaFilesFolder,"/",basename,TRANSCRIPT_FILE_EXT,'" default>',
             '</video>'
