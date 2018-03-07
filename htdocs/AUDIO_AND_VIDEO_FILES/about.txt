@@ -1,1 +1,1 @@
-Place MP3 and matching VTT files in this folder. File names should match (including case)
+Place ".mp3" and/or ".mp4" and matching ".vtt" files in this folder. File names should match (including case).

@@ -2,8 +2,16 @@
 
 ## Windows within admin rights
 
-On Windows without admin rights, run start.bat. If this fails,
- open the IP address listed in the "start.bat" command window in Chrome e.g.
+On Windows without admin rights, download the following portable open source server software:
+
+[http://miniweb.sourceforge.net/](http://miniweb.sourceforge.net/)
+
+Extract `miniweb.exe` to the current folder.
+
+Then run start.bat. This should open Chrome and show the tool.
+
+However, the IP address used by Miniweb is unpredictable. If the tool does not load,
+ type the IP address listed in the "start.bat" command window into the address bar in Chrome e.g.
  `10.228.155.56:8000`.
 
 ## Mac or Windows with admin rights
@@ -27,7 +35,7 @@ Add MP3/MP4 and matching VTT files to the `AUDIO_AND_VIDEO_FILES` directory.
 Each file and its matching mp3 or mp4 should have exactly the same
  filename (only the ".mp3"/".mp4" or ".vtt" file extension should
   distinguish the files.)
-  
+
 ## Running a preview
 
 In Chrome click "Choose Files" then navigate to the 
