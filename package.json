@@ -1,0 +1,15 @@
+{
+  "name": "vtt-preview-tool",
+  "version": "1.0.0",
+  "description": "A tool for testing VTT against audio and video files",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "tool": "node index.js"
+  },
+  "author": "David Pinching, OUP",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}

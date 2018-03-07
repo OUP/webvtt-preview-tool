@@ -3,7 +3,7 @@
         "browser": true,
         "commonjs": false,
         "es6": false,
-        "node": false
+        "node": true
     },
     "parserOptions": {
         "ecmaFeatures": {
